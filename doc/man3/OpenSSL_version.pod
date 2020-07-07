@@ -42,7 +42,7 @@ Deprecated:
  #define OPENSSL_VERSION_NUMBER 0xnnnnnnnnnL
 
  /* from openssl/crypto.h */
- unsigned long OpenSSL_version_num();
+ unsigned long OpenSSL_version_num(void);
 
 =head1 DESCRIPTION
 

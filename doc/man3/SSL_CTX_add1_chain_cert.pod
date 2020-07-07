@@ -28,8 +28,8 @@ chain certificate processing
  int SSL_get0_chain_certs(SSL *ssl, STACK_OF(X509) **sk);
  int SSL_clear_chain_certs(SSL *ssl);
 
- int SSL_CTX_build_cert_chain(SSL_CTX *ctx, flags);
- int SSL_build_cert_chain(SSL *ssl, flags);
+ int SSL_CTX_build_cert_chain(SSL_CTX *ctx, int flags);
+ int SSL_build_cert_chain(SSL *ssl, int flags);
 
  int SSL_CTX_select_current_cert(SSL_CTX *ctx, X509 *x509);
  int SSL_select_current_cert(SSL *ssl, X509 *x509);

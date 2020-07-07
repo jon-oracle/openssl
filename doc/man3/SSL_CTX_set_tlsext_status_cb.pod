@@ -30,8 +30,8 @@ SSL_set_tlsext_status_ocsp_resp
  long SSL_set_tlsext_status_type(SSL *s, int type);
  long SSL_get_tlsext_status_type(SSL *s);
 
- long SSL_get_tlsext_status_ocsp_resp(ssl, unsigned char **resp);
- long SSL_set_tlsext_status_ocsp_resp(ssl, unsigned char *resp, int len);
+ long SSL_get_tlsext_status_ocsp_resp(SSL *ssl, unsigned char **resp);
+ long SSL_set_tlsext_status_ocsp_resp(SSL *ssl, unsigned char *resp, int len);
 
 =head1 DESCRIPTION
 

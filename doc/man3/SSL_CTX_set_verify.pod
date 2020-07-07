@@ -19,7 +19,7 @@ SSL_CTX_set_post_handshake_auth
 
  void SSL_CTX_set_verify(SSL_CTX *ctx, int mode, SSL_verify_cb verify_callback);
  void SSL_set_verify(SSL *ssl, int mode, SSL_verify_cb verify_callback);
- SSL_get_ex_data_X509_STORE_CTX_idx(void);
+ int SSL_get_ex_data_X509_STORE_CTX_idx(void);
 
  void SSL_CTX_set_verify_depth(SSL_CTX *ctx, int depth);
  void SSL_set_verify_depth(SSL *ssl, int depth);

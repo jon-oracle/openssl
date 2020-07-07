@@ -11,7 +11,7 @@ RAND_keep_random_devices_open
  #include <openssl/rand.h>
 
  int RAND_status(void);
- int RAND_poll();
+ int RAND_poll(void);
 
  void RAND_add(const void *buf, int num, double randomness);
  void RAND_seed(const void *buf, int num);

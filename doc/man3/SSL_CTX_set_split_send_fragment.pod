@@ -14,7 +14,7 @@ SSL_SESSION_get_max_fragment_length - Control fragment size settings and pipelin
 
  #include <openssl/ssl.h>
 
- long SSL_CTX_set_max_send_fragment(SSL_CTX *ctx, long);
+ long SSL_CTX_set_max_send_fragment(SSL_CTX *ctx, long m);
  long SSL_set_max_send_fragment(SSL *ssl, long m);
 
  long SSL_CTX_set_max_pipelines(SSL_CTX *ctx, long m);
