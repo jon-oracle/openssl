@@ -19,7 +19,7 @@ data for a TLS/SSL connection. The new structure inherits the settings
 of the underlying context B<ctx>: connection method,
 options, verification settings, timeout settings. An B<SSL> structure is
 reference counted. Creating an B<SSL> structure for the first time increments
-the reference count. Freeing it (using SSL_free) decrements it. When the
+the reference count. Freeing it (using L<SSL_free()|SSL_free(3)> decrements it. When the
 reference count drops to zero, any memory or resources allocated to the B<SSL>
 structure are freed.
 

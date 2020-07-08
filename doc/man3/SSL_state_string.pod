@@ -32,7 +32,7 @@ so that SSL_state_string[_long]() may be called.
 
 For both blocking or non-blocking sockets, the details state information
 can be used within the info_callback function set with the
-SSL_set_info_callback() call.
+L<SSL_set_info_callback()|SSL_CTX_set_info_callback(3)> call.
 
 =head1 RETURN VALUES
 

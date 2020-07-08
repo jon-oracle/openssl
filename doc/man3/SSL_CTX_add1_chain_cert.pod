@@ -70,7 +70,7 @@ selected on the corresponding B<ctx> structure.
 
 SSL_CTX_select_current_cert() selects B<x509> as the current end entity
 certificate, but only if B<x509> has already been loaded into B<ctx> using a
-function such as SSL_CTX_use_certificate().
+function such as L<SSL_CTX_use_certificate()|SSL_CTX_use_certificate(3)>.
 
 SSL_set0_chain(), SSL_set1_chain(), SSL_add0_chain_cert(),
 SSL_add1_chain_cert(), SSL_get0_chain_certs(), SSL_clear_chain_certs(),
@@ -100,7 +100,7 @@ B<MUST NOT> be freed after the operation.
 =head1 NOTES
 
 The chains associate with an SSL_CTX structure are copied to any SSL
-structures when SSL_new() is called. SSL structures will not be affected
+structures when L<SSL_new()|SSL_new(3)> is called. SSL structures will not be affected
 by any chains subsequently changed in the parent SSL_CTX.
 
 One chain can be set for each key type supported by a server. So, for example,
@@ -112,7 +112,7 @@ subordinate CAs are sent in the correct order. Misconfigured applications
 sending incorrect certificate chains often cause problems with peers.
 
 For example an application can add any set of certificates using
-SSL_CTX_use_certificate_chain_file() then call SSL_CTX_build_cert_chain()
+L<SSL_CTX_use_certificate_chain_file()|SSL_CTX_use_certificate(3)> then call SSL_CTX_build_cert_chain()
 with the option B<SSL_BUILD_CHAIN_FLAG_CHECK> to check and reorder them.
 
 Applications can issue non fatal warnings when checking chains by setting
@@ -124,7 +124,7 @@ efficient than the automatic chain building as it is only performed once.
 Automatic chain building is performed on each new session.
 
 If any certificates are added using these functions no certificates added
-using SSL_CTX_add_extra_chain_cert() will be used.
+using L<SSL_CTX_add_extra_chain_cert()|SSL_CTX_add_extra_chain_cert(3)> will be used.
 
 =head1 RETURN VALUES
 

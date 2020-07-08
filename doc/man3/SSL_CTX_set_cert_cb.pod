@@ -36,10 +36,10 @@ if required to continue.
 
 =head1 NOTES
 
-An application will typically call SSL_use_certificate() and
-SSL_use_PrivateKey() to set the end entity certificate and private key.
+An application will typically call L<SSL_use_certificate()|SSL_CTX_use_certificate(3)> and
+L<SSL_use_PrivateKey()|SSL_CTX_use_certificate(3)> to set the end entity certificate and private key.
 It can add intermediate and optionally the root CA certificates using
-SSL_add1_chain_cert().
+L<SSL_add1_chain_cert()|SSL_CTX_add1_chain_cert(3)>.
 
 It might also call SSL_certs_clear() to delete any certificates associated
 with the B<SSL> object.

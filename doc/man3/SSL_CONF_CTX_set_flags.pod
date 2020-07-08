@@ -19,7 +19,7 @@ The function SSL_CONF_CTX_clear_flags() clears B<flags> in the context B<cctx>.
 
 =head1 NOTES
 
-The flags set affect how subsequent calls to SSL_CONF_cmd() or
+The flags set affect how subsequent calls to L<SSL_CONF_cmd()|SSL_CONF_cmd(3)> or
 SSL_CONF_argv() behave.
 
 Currently the following B<flags> values are recognised:

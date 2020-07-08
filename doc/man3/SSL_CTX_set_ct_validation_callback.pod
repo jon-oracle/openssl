@@ -48,7 +48,7 @@ callback.
 Applications can call L<SSL_get_verify_result(3)> to check the status at
 handshake completion, even after session resumption since the verification
 status is part of the saved session state.
-See L<SSL_set_verify(3)>, <SSL_get_verify_result(3)>, L<SSL_session_reused(3)>.
+See L<SSL_set_verify(3)>, <L<SSL_get_verify_result()|SSL_get_verify_result(3)>3)>, L<SSL_session_reused(3)>.
 
 If B<validation_mode> is equal to B<SSL_CT_VALIDATION_PERMISSIVE>, then the
 handshake continues, and the verification status is not modified, regardless of
@@ -101,7 +101,7 @@ otherwise.
 When SCT processing is enabled, OCSP stapling will be enabled. This is because
 one possible source of SCTs is the OCSP response from a server.
 
-The time returned by SSL_SESSION_get_time() will be used to evaluate whether any
+The time returned by L<SSL_SESSION_get_time()|SSL_SESSION_get_time(3)> will be used to evaluate whether any
 presented SCTs have timestamps that are in the future (and therefore invalid).
 
 =head1 RESTRICTIONS

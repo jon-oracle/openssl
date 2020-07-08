@@ -39,7 +39,7 @@ This may be the case during handshake processing, when control flow can be
 returned to the application via any of several callback methods.  The internal
 sequencing of handshake processing and callback invocation is not guaranteed
 to be stable from release to release, and at present only the callback set
-by SSL_CTX_set_alpn_select_cb() is guaranteed to have a non-NULL return value.
+by L<SSL_CTX_set_alpn_select_cb()|SSL_CTX_set_alpn_select_cb(3)> is guaranteed to have a non-NULL return value.
 Other callbacks may be added to this list over time.
 
 =head1 RETURN VALUES

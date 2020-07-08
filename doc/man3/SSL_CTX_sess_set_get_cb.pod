@@ -64,7 +64,7 @@ the callback returns B<0>, the session will be immediately removed from the
 internal cache and the reference count released. If the callback returns B<1>,
 the application retains the reference (for an entry in the
 application-maintained "external session cache"), and is responsible for
-calling SSL_SESSION_free() when the session reference is no longer in use.
+calling L<SSL_SESSION_free()|SSL_SESSION_free(3)> when the session reference is no longer in use.
 
 Note that in TLSv1.3, sessions are established after the main
 handshake has completed. The server decides when to send the client the session

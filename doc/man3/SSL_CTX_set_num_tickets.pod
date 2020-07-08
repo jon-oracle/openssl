@@ -39,7 +39,7 @@ with the updated client identity (i.e. including their certificate and
 verification status). The number of tickets issued will normally be the same as
 was used for the initial handshake. If the initial handshake was a full
 handshake then SSL_set_num_tickets() can be called again prior to calling
-SSL_verify_client_post_handshake() to update the number of tickets that will be
+L<SSL_verify_client_post_handshake()|SSL_CTX_set_verify(3)> to update the number of tickets that will be
 sent.
 
 To issue tickets after other events (such as application-layer changes),

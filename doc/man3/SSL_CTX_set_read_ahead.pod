@@ -38,18 +38,18 @@ SSL_CTX_get_default_read_ahead() is identical to SSL_CTX_get_read_ahead().
 
 These functions have no impact when used with DTLS. The return values for
 SSL_CTX_get_read_head() and SSL_get_read_ahead() are undefined for DTLS. Setting
-B<read_ahead> can impact the behaviour of the SSL_pending() function
+B<read_ahead> can impact the behaviour of the L<SSL_pending()|SSL_pending(3)> function
 (see L<SSL_pending(3)>).
 
-Since SSL_read() can return B<SSL_ERROR_WANT_READ> for non-application data
-records, and SSL_has_pending() can't tell the difference between processed and
+Since L<SSL_read()|SSL_read(3)> can return B<SSL_ERROR_WANT_READ> for non-application data
+records, and L<SSL_has_pending()|SSL_pending(3)> can't tell the difference between processed and
 unprocessed data, it's recommended that if read ahead is turned on that
-B<SSL_MODE_AUTO_RETRY> is not turned off using SSL_CTX_clear_mode().
+B<SSL_MODE_AUTO_RETRY> is not turned off using L<SSL_CTX_clear_mode()|SSL_CTX_set_mode(3)>.
 That will prevent getting B<SSL_ERROR_WANT_READ> when there is still a complete
 record available that hasn't been processed.
 
 If the application wants to continue to use the underlying transport (e.g. TCP
-connection) after the SSL connection is finished using SSL_shutdown() reading
+connection) after the SSL connection is finished using L<SSL_shutdown()|SSL_shutdown(3)> reading
 ahead should be turned off.
 Otherwise the SSL structure might read data that it shouldn't.
 

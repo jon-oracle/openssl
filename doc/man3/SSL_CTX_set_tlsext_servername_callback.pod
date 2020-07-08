@@ -22,7 +22,7 @@ SSL_set_tlsext_host_name - handle server name indication (SNI)
 =head1 DESCRIPTION
 
 The functionality provided by the servername callback is mostly superseded by
-the ClientHello callback, which can be set using SSL_CTX_set_client_hello_cb().
+the ClientHello callback, which can be set using L<SSL_CTX_set_client_hello_cb()|SSL_CTX_set_client_hello_cb(3)>.
 However, even where the ClientHello callback is used, the servername callback is
 still necessary in order to acknowledge the servername requested by the client.
 

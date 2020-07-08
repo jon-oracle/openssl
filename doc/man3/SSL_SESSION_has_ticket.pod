@@ -27,7 +27,7 @@ SSL_SESSION_get0_ticket obtains a pointer to the ticket associated with a
 session. The length of the ticket is written to B<*len>. If B<tick> is non
 NULL then a pointer to the ticket is written to B<*tick>. The pointer is only
 valid while the connection is in use. The session (and hence the ticket pointer)
-may also become invalid as a result of a call to SSL_CTX_flush_sessions().
+may also become invalid as a result of a call to L<SSL_CTX_flush_sessions()|SSL_CTX_flush_sessions(3)>.
 
 =head1 RETURN VALUES
 

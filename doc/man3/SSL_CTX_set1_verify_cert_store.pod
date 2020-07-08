@@ -43,7 +43,7 @@ after the operation.
 =head1 NOTES
 
 The stores pointers associated with an SSL_CTX structure are copied to any SSL
-structures when SSL_new() is called. As a result SSL structures will not be
+structures when L<SSL_new()|SSL_new(3)> is called. As a result SSL structures will not be
 affected if the parent SSL_CTX store pointer is set to a new value.
 
 The verification store is used to verify the certificate chain sent by the

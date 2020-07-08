@@ -14,7 +14,7 @@ client extension type
 =head1 DESCRIPTION
 
 SSL_CTX_has_client_custom_ext() checks whether a handler has been set for a
-client extension of type B<ext_type> using SSL_CTX_add_client_custom_ext().
+client extension of type B<ext_type> using L<SSL_CTX_add_client_custom_ext()|SSL_extension_supported(3)>.
 
 =head1 RETURN VALUES
 

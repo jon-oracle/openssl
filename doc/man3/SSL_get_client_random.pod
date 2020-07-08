@@ -61,7 +61,7 @@ in place of RAND_bytes() would be grossly foolish.
 The security of your TLS session depends on keeping the master key secret:
 do not expose it, or any information about it, to anybody.
 If you need to calculate another secret value that depends on the master
-secret, you should probably use SSL_export_keying_material() instead, and
+secret, you should probably use L<SSL_export_keying_material()|SSL_export_keying_material(3)> instead, and
 forget that you ever saw these functions.
 
 In current versions of the TLS protocols, the length of client_random

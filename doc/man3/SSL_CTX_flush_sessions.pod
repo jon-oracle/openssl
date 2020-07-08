@@ -18,7 +18,7 @@ B<ctx> to remove sessions expired at time B<tm>.
 =head1 NOTES
 
 If enabled, the internal session cache will collect all sessions established
-up to the specified maximum number (see SSL_CTX_sess_set_cache_size()).
+up to the specified maximum number (see L<SSL_CTX_sess_set_cache_size()|SSL_CTX_sess_set_cache_size(3)>.
 As sessions will not be reused ones they are expired, they should be
 removed from the cache to save resources. This can either be done
 automatically whenever 255 new sessions were established (see

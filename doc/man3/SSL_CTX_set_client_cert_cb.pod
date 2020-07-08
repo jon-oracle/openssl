@@ -57,7 +57,7 @@ If a callback function is defined and no certificate was yet defined for the
 SSL object, the callback function will be called.
 If the callback function returns a certificate, the OpenSSL library
 will try to load the private key and certificate data into the SSL
-object using the SSL_use_certificate() and SSL_use_private_key() functions.
+object using the L<SSL_use_certificate()|SSL_CTX_use_certificate(3)> and SSL_use_private_key() functions.
 Thus it will permanently install the certificate and key for this SSL
 object. It will not be reset by calling L<SSL_clear(3)>.
 If the callback returns no certificate, the OpenSSL library will not send

@@ -150,7 +150,7 @@ B<SSL_TICKET_SUCCESS_RENEW> then the application can call
 SSL_SESSION_get0_ticket_appdata() using the session provided in the B<ss>
 argument to retrieve the application data.
 
-When the B<gen_cb> callback is invoked, the SSL_get_session() function can be
+When the B<gen_cb> callback is invoked, the L<SSL_get_session()|SSL_get_session(3)> function can be
 used to retrieve the SSL_SESSION for SSL_SESSION_set1_ticket_appdata().
 
 By default, in TLSv1.2 and below, a new session ticket is not issued on a

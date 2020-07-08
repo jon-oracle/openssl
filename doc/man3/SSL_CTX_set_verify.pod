@@ -55,7 +55,7 @@ Post-Handshake Authentication extension to be added to the ClientHello such that
 post-handshake authentication can be requested by the server. If B<val> is 0
 then the extension is not sent, otherwise it is. By default the extension is not
 sent. A certificate callback will need to be set via
-SSL_CTX_set_client_cert_cb() if no certificate is provided at initialization.
+L<SSL_CTX_set_client_cert_cb()|SSL_CTX_set_client_cert_cb(3)> if no certificate is provided at initialization.
 
 SSL_verify_client_post_handshake() causes a CertificateRequest message to be
 sent by a server on the given B<ssl> connection. The SSL_VERIFY_PEER flag must
@@ -188,13 +188,13 @@ alert message, if SSL_VERIFY_PEER is set.
 
 After calling SSL_set_post_handshake_auth(), the client will need to add a
 certificate or certificate callback to its configuration before it can
-successfully authenticate. This must be called before SSL_connect().
+successfully authenticate. This must be called before L<SSL_connect()|SSL_connect(3)>.
 
 SSL_verify_client_post_handshake() requires that verify flags have been
 previously set, and that a client sent the post-handshake authentication
 extension. When the client returns a certificate the verify callback will be
 invoked. A write operation must take place for the Certificate Request to be
-sent to the client, this can be done with SSL_do_handshake() or SSL_write_ex().
+sent to the client, this can be done with SSL_do_handshake() or L<SSL_write_ex()|SSL_write(3)>.
 Only one certificate request may be outstanding at any time.
 
 When post-handshake authentication occurs, a refreshed NewSessionTicket

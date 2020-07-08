@@ -603,9 +603,9 @@ For example an application might call SSL_CONF_cmd() and if it returns
 commands.
 
 Applications can also use SSL_CONF_cmd() to process command lines though the
-utility function SSL_CONF_cmd_argv() is normally used instead. One way
+utility function L<SSL_CONF_cmd_argv()|SSL_CONF_cmd_argv(3)> is normally used instead. One way
 to do this is to set the prefix to an appropriate value using
-SSL_CONF_CTX_set1_prefix(), pass the current argument to B<option> and the
+L<SSL_CONF_CTX_set1_prefix()|SSL_CONF_CTX_set1_prefix(3)>, pass the current argument to B<option> and the
 following argument to B<value> (which may be NULL).
 
 In this case if the return value is positive then it is used to skip that

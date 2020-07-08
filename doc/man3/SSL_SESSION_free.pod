@@ -51,7 +51,7 @@ L<SSL_CTX_flush_sessions(3)> operation.
 
 SSL_SESSION_free() must only be called for SSL_SESSION objects, for
 which the reference count was explicitly incremented (e.g.
-by calling SSL_get1_session(), see L<SSL_get_session(3)>)
+by calling L<SSL_get1_session()|SSL_get_session(3)>, see L<SSL_get_session(3)>)
 or when the SSL_SESSION object was generated outside a TLS handshake
 operation, e.g. by using L<d2i_SSL_SESSION(3)>.
 It must not be called on other SSL_SESSION objects, as this would cause

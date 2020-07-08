@@ -33,8 +33,8 @@ set to B<SSL_KEY_UPDATE_NONE>.
 
 SSL_key_update() must only be called after the initial handshake has been
 completed and TLSv1.3 has been negotiated. The key update will not take place
-until the next time an IO operation such as SSL_read_ex() or SSL_write_ex()
-takes place on the connection. Alternatively SSL_do_handshake() can be called to
+until the next time an IO operation such as SSL_read_ex() or L<SSL_write_ex()|SSL_write(3)>
+takes place on the connection. Alternatively L<SSL_do_handshake()|SSL_do_handshake(3)> can be called to
 force the update to take place immediately.
 
 SSL_get_key_update_type() can be used to determine whether a key update
@@ -48,7 +48,7 @@ connection will result in an error.
 
 When called from the client side, SSL_renegotiate() schedules a completely new
 handshake over an existing SSL/TLS connection. The next time an IO operation
-such as SSL_read_ex() or SSL_write_ex() takes place on the connection a check
+such as SSL_read_ex() or L<SSL_write_ex()|SSL_write(3)> takes place on the connection a check
 will be performed to confirm that it is a suitable time to start a
 renegotiation. If so, then it will be initiated immediately. OpenSSL will not
 attempt to resume any session associated with the connection in the new

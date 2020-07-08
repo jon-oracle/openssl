@@ -58,12 +58,12 @@ PEM extension name must begin with the phrase "BEGIN SERVERINFOV2 FOR " for
 SSL_SERVERINFOV2 data or "BEGIN SERVERINFO FOR " for SSL_SERVERINFOV1 data.
 
 If more than one certificate (RSA/DSA) is installed using
-SSL_CTX_use_certificate(), the serverinfo extension will be loaded into the
+L<SSL_CTX_use_certificate()|SSL_CTX_use_certificate(3)>, the serverinfo extension will be loaded into the
 last certificate installed.  If e.g. the last item was a RSA certificate, the
 loaded serverinfo extension data will be loaded for that certificate.  To
 use the serverinfo extension for multiple certificates,
 SSL_CTX_use_serverinfo() needs to be called multiple times, once B<after>
-each time a certificate is loaded via a call to SSL_CTX_use_certificate().
+each time a certificate is loaded via a call to L<SSL_CTX_use_certificate()|SSL_CTX_use_certificate(3)>.
 
 =head1 RETURN VALUES
 

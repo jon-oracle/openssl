@@ -21,7 +21,7 @@ L<SSL_new(3)> are not affected, except when
 L<SSL_clear(3)> is being called.
 
 SSL_set_ssl_method() sets a new TLS/SSL B<method> for a particular B<ssl>
-object. It may be reset, when SSL_clear() is called.
+object. It may be reset, when L<SSL_clear()|SSL_clear(3)> is called.
 
 SSL_get_ssl_method() returns a function pointer to the TLS/SSL method
 set in B<ssl>.

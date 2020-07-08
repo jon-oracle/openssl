@@ -28,13 +28,13 @@ has sent them) it is B<not> a verified chain.
 SSL_get0_verified_chain() returns the B<verified> certificate chain
 of the peer including the peer's end entity certificate. It must be called
 after a session has been successfully established. If peer verification was
-not successful (as indicated by SSL_get_verify_result() not returning
+not successful (as indicated by L<SSL_get_verify_result()|SSL_get_verify_result(3)> not returning
 X509_V_OK) the chain may be incomplete or invalid.
 
 =head1 NOTES
 
 If the session is resumed peers do not send certificates so a NULL pointer
-is returned by these functions. Applications can call SSL_session_reused()
+is returned by these functions. Applications can call L<SSL_session_reused()|SSL_session_reused(3)>
 to determine whether a session is resumed.
 
 The reference count of each certificate in the returned STACK_OF(X509) object

@@ -128,7 +128,7 @@ B<SSL_CTX>.
 =head1 NOTES
 
 When a TLS/SSL server requests a client certificate (see
-B<SSL_CTX_set_verify(3)>), it sends a list of CAs, for which it will accept
+B<L<SSL_CTX_set_verify()|SSL_CTX_set_verify(3)>3)>), it sends a list of CAs, for which it will accept
 certificates, to the client.
 
 This list must explicitly be set using SSL_CTX_set_client_CA_list() or

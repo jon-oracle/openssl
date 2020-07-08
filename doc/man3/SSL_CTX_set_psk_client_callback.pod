@@ -72,9 +72,9 @@ Only the handshake digest associated with the ciphersuite is relevant for the
 PSK (the server may go on to negotiate any ciphersuite which is compatible with
 the digest). The application can use any TLSv1.3 ciphersuite. If B<md> is
 not NULL the handshake digest for the ciphersuite should be the same.
-The ciphersuite can be set via a call to <SSL_SESSION_set_cipher(3)>. The
+The ciphersuite can be set via a call to <L<SSL_SESSION_set_cipher()|SSL_SESSION_get0_cipher(3)>3)>. The
 handshake digest of an SSL_CIPHER object can be checked using
-<SSL_CIPHER_get_handshake_digest(3)>.
+<L<SSL_CIPHER_get_handshake_digest()|SSL_CIPHER_get_name(3)>3)>.
 
 =item The protocol version
 

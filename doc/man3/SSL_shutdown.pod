@@ -21,7 +21,7 @@ a currently open session is considered closed and good and will be kept in the
 session cache for further reuse.
 
 Note that SSL_shutdown() must not be called if a previous fatal error has
-occurred on a connection i.e. if SSL_get_error() has returned SSL_ERROR_SYSCALL
+occurred on a connection i.e. if L<SSL_get_error()|SSL_get_error(3)> has returned SSL_ERROR_SYSCALL
 or SSL_ERROR_SSL.
 
 The shutdown procedure consists of two steps: sending of the close_notify
@@ -47,7 +47,7 @@ complete shutdown procedure must be performed, so that the peers stay
 synchronized.
 
 SSL_shutdown() only closes the write direction.
-It is not possible to call SSL_write() after calling SSL_shutdown().
+It is not possible to call L<SSL_write()|SSL_write(3)> after calling SSL_shutdown().
 The read direction is closed by the peer.
 
 The behaviour of SSL_shutdown() additionally depends on the underlying BIO.
@@ -56,7 +56,7 @@ handshake step has been finished or an error occurred.
 
 If the underlying BIO is B<non-blocking>, SSL_shutdown() will also return
 when the underlying BIO could not satisfy the needs of SSL_shutdown()
-to continue the handshake. In this case a call to SSL_get_error() with the
+to continue the handshake. In this case a call to L<SSL_get_error()|SSL_get_error(3)> with the
 return value of SSL_shutdown() will yield B<SSL_ERROR_WANT_READ> or
 B<SSL_ERROR_WANT_WRITE>. The calling process then must repeat the call after
 taking appropriate action to satisfy the needs of SSL_shutdown().
@@ -68,7 +68,7 @@ into or retrieved out of the BIO before being able to continue.
 After SSL_shutdown() returned 0, it is possible to call SSL_shutdown() again
 to wait for the peer's close_notify alert.
 SSL_shutdown() will return 1 in that case.
-However, it is recommended to wait for it using SSL_read() instead.
+However, it is recommended to wait for it using L<SSL_read()|SSL_read(3)> instead.
 
 SSL_shutdown() can be modified to only set the connection to "shutdown"
 state but not actually send the close_notify alert messages,
@@ -107,23 +107,23 @@ it.
 The peer is still allowed to send data after receiving the close_notify
 event.
 When it is done sending data, it will send the close_notify alert.
-SSL_read() should be called until all data is received.
-SSL_read() will indicate the end of the peer data by returning <= 0
-and SSL_get_error() returning SSL_ERROR_ZERO_RETURN.
+L<SSL_read()|SSL_read(3)> should be called until all data is received.
+L<SSL_read()|SSL_read(3)> will indicate the end of the peer data by returning <= 0
+and L<SSL_get_error()|SSL_get_error(3)> returning SSL_ERROR_ZERO_RETURN.
 
 =head2 Peer closes the connection
 
 If the peer already sent the close_notify alert B<and> it was
 already processed implicitly inside another function
 (L<SSL_read(3)>), the SSL_RECEIVED_SHUTDOWN flag is set.
-SSL_read() will return <= 0 in that case, and SSL_get_error() will return
+L<SSL_read()|SSL_read(3)> will return <= 0 in that case, and SSL_get_error() will return
 SSL_ERROR_ZERO_RETURN.
 SSL_shutdown() will send the close_notify alert, set the SSL_SENT_SHUTDOWN
 flag.
 If successful, SSL_shutdown() will return 1.
 
 Whether SSL_RECEIVED_SHUTDOWN is already set can be checked using the
-SSL_get_shutdown() (see also L<SSL_set_shutdown(3)> call.
+L<SSL_get_shutdown()|SSL_set_shutdown(3)> (see also L<SSL_set_shutdown(3)> call.
 
 =head1 RETURN VALUES
 

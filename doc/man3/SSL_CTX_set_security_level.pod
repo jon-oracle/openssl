@@ -154,7 +154,7 @@ alert.
 
 Attempts to set certificates or parameters with insufficient security are
 also blocked. For example trying to set a certificate using a 512 bit RSA
-key using SSL_CTX_use_certificate() at level 1. Applications which do not
+key using L<SSL_CTX_use_certificate()|SSL_CTX_use_certificate(3)> at level 1. Applications which do not
 check the return values for errors will misbehave: for example it might
 appear that a certificate is not set at all because it had been rejected.
 

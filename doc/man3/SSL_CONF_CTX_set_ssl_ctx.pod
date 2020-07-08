@@ -15,12 +15,12 @@ SSL_CONF_CTX_set_ssl_ctx, SSL_CONF_CTX_set_ssl - set context to configure
 
 SSL_CONF_CTX_set_ssl_ctx() sets the context associated with B<cctx> to the
 B<SSL_CTX> structure B<ctx>. Any previous B<SSL> or B<SSL_CTX> associated with
-B<cctx> is cleared. Subsequent calls to SSL_CONF_cmd() will be sent to
+B<cctx> is cleared. Subsequent calls to L<SSL_CONF_cmd()|SSL_CONF_cmd(3)> will be sent to
 B<ctx>.
 
 SSL_CONF_CTX_set_ssl() sets the context associated with B<cctx> to the
 B<SSL> structure B<ssl>. Any previous B<SSL> or B<SSL_CTX> associated with
-B<cctx> is cleared. Subsequent calls to SSL_CONF_cmd() will be sent to
+B<cctx> is cleared. Subsequent calls to L<SSL_CONF_cmd()|SSL_CONF_cmd(3)> will be sent to
 B<ssl>.
 
 =head1 NOTES

@@ -64,19 +64,19 @@ Pipelining operates slightly differently for reading encrypted data compared to
 writing encrypted data. SSL_CTX_set_split_send_fragment() and
 SSL_set_split_send_fragment() define how data is split up into pipelines when
 writing encrypted data. The number of pipelines used will be determined by the
-amount of data provided to the SSL_write_ex() or SSL_write() call divided by
+amount of data provided to the SSL_write_ex() or L<SSL_write()|SSL_write(3)> call divided by
 B<split_send_fragment>.
 
 For example if B<split_send_fragment> is set to 2000 and B<max_pipelines> is 4
 then:
 
-SSL_write/SSL_write_ex called with 0-2000 bytes == 1 pipeline used
+L<SSL_write()|SSL_write(3)>/SSL_write_ex called with 0-2000 bytes == 1 pipeline used
 
-SSL_write/SSL_write_ex called with 2001-4000 bytes == 2 pipelines used
+L<SSL_write()|SSL_write(3)>/SSL_write_ex called with 2001-4000 bytes == 2 pipelines used
 
-SSL_write/SSL_write_ex called with 4001-6000 bytes == 3 pipelines used
+L<SSL_write()|SSL_write(3)>/SSL_write_ex called with 4001-6000 bytes == 3 pipelines used
 
-SSL_write/SSL_write_ex called with 6001+ bytes == 4 pipelines used
+L<SSL_write()|SSL_write(3)>/SSL_write_ex called with 6001+ bytes == 4 pipelines used
 
 B<split_send_fragment> must always be less than or equal to
 B<max_send_fragment>. By default it is set to be equal to B<max_send_fragment>.
@@ -95,7 +95,7 @@ read as much data into the read buffer as the network can provide and will fit
 into the buffer. Without this set data is read into the read buffer one record
 at a time. The more data that can be read, the more opportunity there is for
 parallelising the processing at the cost of increased memory overhead per
-connection. Setting B<read_ahead> can impact the behaviour of the SSL_pending()
+connection. Setting B<read_ahead> can impact the behaviour of the L<SSL_pending()|SSL_pending(3)>
 function (see L<SSL_pending(3)>).
 
 The SSL_CTX_set_default_read_buffer_len() and SSL_set_default_read_buffer_len()

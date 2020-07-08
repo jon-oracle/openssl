@@ -86,7 +86,7 @@ library context is used and no property query string is specified.
 
 An B<SSL_CTX> object is reference counted. Creating an B<SSL_CTX> object for the
 first time increments the reference count. Freeing the B<SSL_CTX> (using
-SSL_CTX_free) decrements it. When the reference count drops to zero, any memory
+L<SSL_CTX_free()|SSL_CTX_free(3)> decrements it. When the reference count drops to zero, any memory
 or resources allocated to the B<SSL_CTX> object are freed. SSL_CTX_up_ref()
 increments the reference count for an existing B<SSL_CTX> structure.
 
