@@ -654,7 +654,7 @@ sub check {
         err($id, "Bad command link L<$target(1)>");
     }
     # Check for proper in-man-3 API links.
-    while ( $contents =~ /L<([^>]*)\(3\)(?:\/.*)?>/g ) {
+    while ( $contents =~ /L<([^|>]*)\(3\)(?:\/.*)?>/g ) {
         my $target = $1;
         err($id, "Bad L<$target>")
             unless $target =~ /^[_[:alpha:]][_[:alnum:]]*$/
