@@ -28,7 +28,7 @@ plan skip_all => "This test is unsupported in a no-dsa build"
 my $no_fips = disabled('fips') || ($ENV{NO_FIPS} // 0);
 
 plan tests =>
-    ($no_fips ? 0 : 3)          # FIPS install test + fips related tests
+    ($no_fips ? 0 : 5)          # FIPS install test + fips related tests
     + 10;
 
 ok(run(app([ 'openssl', 'genpkey', '-genparam',
@@ -114,8 +114,6 @@ sub genparam_fips {
 
 sub genpkey_fips {
     my ($pbits, $qbits, @prov) = @_;
-
-    ok(system('set | grep OPENSSL'), "Debug command");
 
     ok(run(app(['openssl', 'genpkey',
                 @prov,
