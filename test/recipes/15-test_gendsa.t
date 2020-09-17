@@ -99,11 +99,38 @@ ok(!run(app([ 'openssl', 'genpkey',
               '-algorithm', 'DSA'])),
    "genpkey DSA with no params should fail");
 
+sub genparam_fips {
+    my ($pbits, $qbits, @prov) = @_;
+
+    ok(run(app(['openssl', 'genpkey',
+                @prov,
+               '-genparam',
+               '-algorithm', 'DSA',
+               '-pkeyopt', "pbits:$pbits",
+               '-pkeyopt', "qbits:$qbits",
+               '-out', "dsa-$pbits-$qbits-params.pem"])),
+       "Generating DSA params with $pbits-bit P, $qbits-bit Q");
+}
+
+sub genpkey_fips {
+    my ($pbits, $qbits, @prov) = @_;
+
+    ok(system('set | grep OPENSSL'), "Debug command");
+
+    ok(run(app(['openssl', 'genpkey',
+                @prov,
+               #'-algorithm', 'DSA',
+               '-paramfile', "dsa-$pbits-$qbits-params.pem",
+               #'-pkeyopt', 'type:fips186_4',
+               '-text',
+               '-out', "dsa-$pbits-$qbits-key.pem"])),
+       "Generating DSA keypair with $pbits-bit P, $qbits-bit Q");
+}
+
 unless ($no_fips) {
-    my $provconf = srctop_file("test", "fips.cnf");
+    my $provconf = srctop_file("test", "fips-and-base.cnf");
     my $provpath = bldtop_dir("providers");
     my @prov = ( "-provider-path", $provpath,
-                 "-provider", "base",
                  "-config", $provconf);
     my $infile = bldtop_file('providers', platform->dso('fips'));
 
@@ -116,22 +143,11 @@ unless ($no_fips) {
 
     $ENV{OPENSSL_TEST_LIBCTX} = "1";
 
-    # Generate params
-    ok(run(app(['openssl', 'genpkey',
-                @prov,
-               '-genparam',
-               '-algorithm', 'DSA',
-               '-pkeyopt', 'pbits:3072',
-               '-pkeyopt', 'qbits:256',
-               '-out', 'gendsatest3072params.pem'])),
-       "Generating 3072-bit DSA params");
+    genparam_fips(2048, 256, @prov);
+    genparam_fips(3072, 256, @prov);
 
-    # Generate keypair
-    ok(run(app(['openssl', 'genpkey',
-                @prov,
-               '-paramfile', 'gendsatest3072params.pem',
-               '-text',
-               '-out', 'gendsatest3072.pem'])),
-       "Generating 3072-bit DSA keypair");
+    genpkey_fips(2048, 256, @prov);
+    genpkey_fips(3072, 256, @prov);
+
 
 }
