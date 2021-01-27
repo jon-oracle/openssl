@@ -34,9 +34,8 @@ IF[{- !$disabled{tests} -}]
           sanitytest rsa_complex exdatatest bntest \
           ecstresstest gmdifftest pbelutest \
           destest mdc2test \
-          exptest \
-          evp_pkey_provided_test evp_test evp_extra_test evp_extra_test2 \
-          evp_fetch_prov_test acvp_test evp_libctx_test ossl_store_test \
+          exptest evp_params_to_legacy_test \
+          acvp_test evp_libctx_test ossl_store_test \
           v3nametest v3ext \
           evp_pkey_provided_test evp_test evp_extra_test evp_extra_test2 \
           evp_fetch_prov_test v3nametest v3ext \
@@ -156,9 +155,13 @@ IF[{- !$disabled{tests} -}]
     DEFINE[evp_extra_test]=NO_FIPS_MODULE
   ENDIF
 
-  SOURCE[evp_pkey_provided_test]=evp_pkey_provided_test.c
+  SOURCE[evp_pkey_provided_test]=evp_pkey_provided_test.c helpers/testdata.c
   INCLUDE[evp_pkey_provided_test]=../include ../apps/include
   DEPEND[evp_pkey_provided_test]=../libcrypto.a libtestutil.a
+
+  SOURCE[evp_params_to_legacy_test]=evp_params_to_legacy_test.c helpers/testdata.c
+  INCLUDE[evp_params_to_legacy_test]=../include ../apps/include
+  DEPEND[evp_params_to_legacy_test]=../libcrypto.a libtestutil.a
 
   IF[{- !$disabled{acvp-tests} -}]
     SOURCE[acvp_test]=acvp_test.c
@@ -291,7 +294,8 @@ IF[{- !$disabled{tests} -}]
   INCLUDE[helpers/pkcs12.o]=.. ../include
   INCLUDE[helpers/ssltestlib.o]=.. ../include
   INCLUDE[helpers/cmp_testlib.o]=.. ../include ../apps/include
-
+  INCLUDE[helpers/testdata.o]=.. ../include
+  
   SOURCE[x509aux]=x509aux.c
   INCLUDE[x509aux]=../include ../apps/include
   DEPEND[x509aux]=../libcrypto libtestutil.a

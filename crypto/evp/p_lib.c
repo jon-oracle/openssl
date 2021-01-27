@@ -1247,6 +1247,7 @@ int EVP_PKEY_get_group_name(const EVP_PKEY *pkey, char *gname, size_t gname_sz,
 #endif
 #ifndef OPENSSL_NO_DH
         case EVP_PKEY_DH:
+        case EVP_PKEY_DHX:
             {
                 DH *dh = EVP_PKEY_get0_DH(pkey);
                 int uid = DH_get_nid(dh);
