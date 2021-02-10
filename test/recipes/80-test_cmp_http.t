@@ -35,8 +35,9 @@ plan skip_all => "Tests involving local HTTP server not available in cross-compi
     if defined $ENV{EXE_SHELL};
 plan skip_all => "Tests involving local HTTP server require 'kill' command"
     if system("which kill");
-plan skip_all => "Tests involving local HTTP server require 'lsof' command"
-    if system("which lsof"); # this typically excludes Solaris
+plan skip_all => "Tests involving local HTTP server require working 'lsof' command"
+    if system("which lsof") || system("lsof"); # This typically excludes Solaris and systems
+                                               # where lsof requires priviledges not held by the user
 
 sub chop_dblquot { # chop any leading and trailing '"' (needed for Windows)
     my $str = shift;
