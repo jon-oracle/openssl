@@ -270,7 +270,7 @@ sub mock_server_pid {
 sub start_mock_server {
     my $args = $_[0]; # optional further CLI arguments
     my $dir = bldtop_dir("");
-    my $cmd = "LD_LIBRARY_PATH=$dir DYLD_LIBRARY_PATH=$dir " .
+    my $cmd = "LD_LIBRARY_PATH=$dir DYLD_LIBRARY_PATH=$dir LIBPATH=$dir " .
         bldtop_dir($app) . " -config server.cnf $args";
     my $pid = mock_server_pid();
     return $pid if $pid; # already running
