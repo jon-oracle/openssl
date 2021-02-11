@@ -110,7 +110,7 @@ static EVP_PKEY *load_dsa_priv_key_params(void)
 #endif /* !OPENSSL_NO_DSA */
 
 #ifndef OPENSSL_NO_DH
-static EVP_PKEY *load_dh_priv_key_legacy()
+static EVP_PKEY *load_dh_priv_key_legacy(void)
 {
     EVP_PKEY *pkey = NULL;
     DH *dh = NULL;
