@@ -10,10 +10,12 @@
 #include <stdio.h>
 #include "internal/cryptlib.h"
 #include <openssl/asn1t.h>
+#include <openssl/core_names.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/x509.h>
 #include <openssl/rand.h>
+#include "crypto/evp.h"
 
 #ifndef OPENSSL_NO_SCRYPT
 /* PKCS#5 scrypt password based encryption structures */
@@ -142,6 +144,7 @@ X509_ALGOR *PKCS5_pbe2_set_scrypt(const EVP_CIPHER *cipher,
     return NULL;
 }
 
+// TODO: Implement these
 int PKCS5_v2_scrypt_keygen_ex(EVP_CIPHER_CTX **ctx, OSSL_PARAM *params, 
                         const char *pass, int passlen, int en_de, 
                         OSSL_LIB_CTX *libctx, const char *propq)
@@ -158,6 +161,10 @@ int PKCS5_v2_scrypt_decode(X509_ALGOR *algor, OSSL_PARAM **params)
 {
     return 0;
 }
+
+const EVP_PBE_METH PKCS5_SCRYPT_METH = {
+    OSSL_KDF_NAME_SCRYPT, PKCS5_v2_scrypt_keygen_ex, PKCS5_v2_scrypt_encode, PKCS5_v2_scrypt_decode
+};
 
 static X509_ALGOR *pkcs5_scrypt_set(const unsigned char *salt, size_t saltlen,
                                     size_t keylen, uint64_t N, uint64_t r,

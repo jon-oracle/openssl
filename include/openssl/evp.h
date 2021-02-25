@@ -477,6 +477,8 @@ typedef struct evp_cipher_info_st {
 } EVP_CIPHER_INFO;
 
 
+typedef struct evp_pbe_meth_st EVP_PBE_METH;
+
 /* Password based encryption function */
 typedef int (EVP_PBE_KEYGEN) (EVP_CIPHER_CTX *ctx, const char *pass,
                               int passlen, ASN1_TYPE *param,
@@ -1408,6 +1410,10 @@ int PKCS5_v2_scrypt_keyivgen(EVP_CIPHER_CTX *ctx, const char *pass,
 
 void PKCS5_PBE_add(void);
 
+int EVP_PBE_asn1_to_params(X509_ALGOR *algor, OSSL_PARAM **params);
+
+int EVP_PBE_params_to_asn1(OSSL_PARAM *params, X509_ALGOR **algor);
+
 int EVP_PBE_CipherInit(ASN1_OBJECT *pbe_obj, const char *pass, int passlen,
                        ASN1_TYPE *param, EVP_CIPHER_CTX *ctx, int en_de);
 
@@ -1432,8 +1438,7 @@ int EVP_PBE_alg_add(int nid, const EVP_CIPHER *cipher, const EVP_MD *md,
 int EVP_PBE_find(int type, int pbe_nid, int *pcnid, int *pmnid,
                  EVP_PBE_KEYGEN **pkeygen);
 int EVP_PBE_find_ex(int type, int pbe_nid, int *pcnid, int *pmnid,
-                    EVP_PBE_KEYGEN **pkeygen, EVP_PBE_KEYGEN_EX **keygen_ex,
-                    EVP_PBE_ENCODE **encode, EVP_PBE_DECODE **decode);
+                    EVP_PBE_KEYGEN **pkeygen, EVP_PBE_METH **meth);
 void EVP_PBE_cleanup(void);
 int EVP_PBE_get(int *ptype, int *ppbe_nid, size_t num);
 

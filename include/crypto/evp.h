@@ -552,6 +552,20 @@ int evp_cipher_param_to_asn1_ex(EVP_CIPHER_CTX *c, ASN1_TYPE *type,
 int evp_cipher_asn1_to_param_ex(EVP_CIPHER_CTX *c, ASN1_TYPE *type,
                                 evp_cipher_aead_asn1_params *params);
 
+typedef struct evp_pbe_meth_st {
+    char *name;
+    EVP_PBE_KEYGEN_EX *keygen_ex;
+    EVP_PBE_ENCODE *encode;
+    EVP_PBE_DECODE *decode;
+} EVP_PBE_METH;
+
+extern const EVP_PBE_METH PKCS5_PBE_METH;
+extern const EVP_PBE_METH PKCS5_PBE2_METH;
+extern const EVP_PBE_METH PKCS12_PBE_METH;
+extern const EVP_PBE_METH PKCS5_PBKDF2_METH;
+extern const EVP_PBE_METH PKCS5_SCRYPT_METH;
+
+
 /*
  * To support transparent execution of operation in backends other
  * than the "origin" key, we support transparent export/import to

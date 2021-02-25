@@ -89,15 +89,16 @@ int PKCS12_key_gen_uni(unsigned char *pass, int passlen, unsigned char *salt,
      * The parameter query isn't available but the library context can be
      * extracted from the passed digest.
      */
-    return PKCS12_key_gen_ex(out, n, params, ossl_provider_libctx(EVP_MD_provider(md_type)), NULL);
+    return PKCS12_key_gen_ex(out, n, params, NULL, 0, ossl_provider_libctx(EVP_MD_provider(md_type)), NULL);
 }
 
 int PKCS12_key_gen_ex(unsigned char *out, size_t outlen, OSSL_PARAM params[],
-                      OSSL_LIB_CTX *ctx, const char *propq)
+                      unsigned char *pass, int passlen, OSSL_LIB_CTX *ctx, const char *propq)
 {
     int res = 0;
     EVP_KDF *kdf;
     EVP_KDF_CTX *kdf_ctx;
+    OSSL_PARAM pass_param[2];
 
     if (outlen <= 0)
         return 0;
@@ -114,10 +115,22 @@ int PKCS12_key_gen_ex(unsigned char *out, size_t outlen, OSSL_PARAM params[],
     if (!EVP_KDF_CTX_set_params(kdf_ctx, params))
         goto err;
 
-    if (EVP_KDF_derive(kdf_ctx, out, outlen, NULL)) {
+    if (pass == NULL) {
+        pass_param[0] = OSSL_PARAM_construct_end();
+    } else {
+        if (passlen <= 0)
+            passlen = strlen(pass);
+        pass_param[0] = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_PASSWORD,
+                                             (char *)pass, (size_t)passlen);
+        pass_param[1] = OSSL_PARAM_construct_end();
+        if (!EVP_KDF_CTX_set_params(kdf_ctx, pass_param))
+            goto err;
+    }
+
+    if (EVP_KDF_derive(kdf_ctx, out, outlen, pass_param)) {
         res = 1;
         OSSL_TRACE_BEGIN(PKCS12_KEYGEN) {
-            BIO_printf(trc_out, "Output KEY (length %d)\n", outlen);
+            BIO_printf(trc_out, "Output KEY (length %ld)\n", outlen);
             BIO_hex_string(trc_out, 0, outlen, out, outlen);
             BIO_printf(trc_out, "\n");
         } OSSL_TRACE_END(PKCS12_KEYGEN);

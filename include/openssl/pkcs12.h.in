@@ -127,6 +127,8 @@ PKCS12_SAFEBAG *PKCS12_SAFEBAG_create_pkcs8_encrypt(int pbe_nid,
                                                     PKCS8_PRIV_KEY_INFO *p8inf);
 PKCS12_SAFEBAG *PKCS12_SAFEBAG_create_pkcs8_encrypt_ex(PKCS8_PRIV_KEY_INFO *p8inf,
                                                        OSSL_PARAM params[],
+                                                       const char *pass,
+                                                       int passlen,
                                                        OSSL_LIB_CTX *ctx, const char *propq);
 
 PKCS12_SAFEBAG *PKCS12_item_pack_safebag(void *obj, const ASN1_ITEM *it,
@@ -139,6 +141,7 @@ X509_SIG *PKCS8_encrypt(int pbe_nid, const EVP_CIPHER *cipher,
                         const char *pass, int passlen, unsigned char *salt,
                         int saltlen, int iter, PKCS8_PRIV_KEY_INFO *p8);
 X509_SIG *PKCS8_encrypt_ex(PKCS8_PRIV_KEY_INFO *p8, OSSL_PARAM params[],
+                           const char *pass, int passlen,
                            OSSL_LIB_CTX *ctx, const char *propq);
 X509_SIG *PKCS8_set0_pbe(const char *pass, int passlen,
                         PKCS8_PRIV_KEY_INFO *p8inf, X509_ALGOR *pbe);
@@ -181,6 +184,11 @@ unsigned char *PKCS12_pbe_crypt(const X509_ALGOR *algor,
                                 const unsigned char *in, int inlen,
                                 unsigned char **data, int *datalen,
                                 int en_de);
+unsigned char *PKCS12_pbe_crypt_ex(OSSL_PARAM *params,
+                                   const char *pass, int passlen,
+                                   const unsigned char *in, int inlen,
+                                   unsigned char **data, int *datalen, int en_de,
+                                   OSSL_LIB_CTX *libctx, const char *propq);
 void *PKCS12_item_decrypt_d2i(const X509_ALGOR *algor, const ASN1_ITEM *it,
                               const char *pass, int passlen,
                               const ASN1_OCTET_STRING *oct, int zbuf);
@@ -198,8 +206,8 @@ int PKCS12_key_gen_uni(unsigned char *pass, int passlen, unsigned char *salt,
 int PKCS12_key_gen_utf8(const char *pass, int passlen, unsigned char *salt,
                         int saltlen, int id, int iter, int n,
                         unsigned char *out, const EVP_MD *md_type);
-int PKCS12_key_gen_ex(unsigned char *out, size_t keylen, OSSL_PARAM params[],
-                      OSSL_LIB_CTX *ctx, const char *propq);
+int PKCS12_key_gen_ex(unsigned char *out, size_t outlen, OSSL_PARAM params[],
+                      unsigned char *pass, int passlen, OSSL_LIB_CTX *ctx, const char *propq);
 
 int PKCS12_PBE_keyivgen(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
                         ASN1_TYPE *param, const EVP_CIPHER *cipher,

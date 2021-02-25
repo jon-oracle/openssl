@@ -202,9 +202,13 @@ void *PKCS12_item_decrypt_d2i(const X509_ALGOR *algor, const ASN1_ITEM *it,
     const unsigned char *p;
     void *ret;
     int outlen = 0;
+    OSSL_PARAM *params = NULL;
 
-    if (!PKCS12_pbe_crypt(algor, pass, passlen, oct->data, oct->length,
-                          &out, &outlen, 0))
+    if (!EVP_PBE_asn1_to_params(algor, &params))
+        return NULL;
+
+    if (!PKCS12_pbe_crypt_ex(params, pass, passlen, oct->data, oct->length,
+                          &out, &outlen, 0, NULL, NULL))
         return NULL;
     p = out;
     OSSL_TRACE_BEGIN(PKCS12_DECRYPT) {
@@ -234,6 +238,7 @@ ASN1_OCTET_STRING *PKCS12_item_i2d_encrypt(X509_ALGOR *algor,
     ASN1_OCTET_STRING *oct = NULL;
     unsigned char *in = NULL;
     int inlen;
+    OSSL_PARAM *params = NULL;
 
     if ((oct = ASN1_OCTET_STRING_new()) == NULL) {
         ERR_raise(ERR_LIB_PKCS12, ERR_R_MALLOC_FAILURE);
@@ -244,8 +249,12 @@ ASN1_OCTET_STRING *PKCS12_item_i2d_encrypt(X509_ALGOR *algor,
         ERR_raise(ERR_LIB_PKCS12, PKCS12_R_ENCODE_ERROR);
         goto err;
     }
-    if (!PKCS12_pbe_crypt(algor, pass, passlen, in, inlen, &oct->data,
-                          &oct->length, 1)) {
+
+    if (!EVP_PBE_asn1_to_params(algor, &params))
+        goto err;
+
+    if (!PKCS12_pbe_crypt_ex(params, pass, passlen, in, inlen, &oct->data,
+                          &oct->length, 1, NULL, NULL)) {
         ERR_raise(ERR_LIB_PKCS12, PKCS12_R_ENCRYPT_ERROR);
         OPENSSL_free(in);
         goto err;

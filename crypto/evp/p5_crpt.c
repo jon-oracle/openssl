@@ -10,8 +10,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "internal/cryptlib.h"
+#include <openssl/core_names.h>
 #include <openssl/x509.h>
 #include <openssl/evp.h>
+#include "crypto/evp.h"
+#include "evp_local.h"
 
 /*
  * Doesn't do anything now: Builtin PBE algorithms in static table.
@@ -131,4 +134,8 @@ int PKCS5_PBE_decode(X509_ALGOR *algor, OSSL_PARAM **params)
 {
     return PKCS12_PBE_decode(algor, params);
 }
+
+const EVP_PBE_METH PKCS5_PBE_METH = {
+    OSSL_PBE_NAME_PKCS5, PKCS5_PBE_keygen_ex, PKCS5_PBE_encode, PKCS5_PBE_decode
+};
 

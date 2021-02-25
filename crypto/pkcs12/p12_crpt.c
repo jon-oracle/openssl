@@ -11,6 +11,7 @@
 #include "internal/cryptlib.h"
 #include <openssl/core.h>
 #include <openssl/core_names.h>
+#include "crypto/evp.h"
 #include <openssl/pkcs12.h>
 
 /* PKCS#12 PBE algorithms now in static table */
@@ -77,7 +78,8 @@ int PKCS12_PBE_keygen_ex(EVP_CIPHER_CTX **ctx, OSSL_PARAM *params,
 {
     int ret;
     unsigned char key[EVP_MAX_KEY_LENGTH], iv[EVP_MAX_IV_LENGTH];
-    const char *ciph_name;
+    char ciph_name[80];
+    char *ciph_ptr = ciph_name;
     const OSSL_PARAM *p;
     EVP_CIPHER *cipher;
 
@@ -91,15 +93,15 @@ int PKCS12_PBE_keygen_ex(EVP_CIPHER_CTX **ctx, OSSL_PARAM *params,
     p = OSSL_PARAM_locate_const(params, OSSL_PBE_PARAM_CIPHER);
     if (p == NULL)
         return 0;
-    if (!OSSL_PARAM_get_utf8_ptr(p, &ciph_name))
+    if (!OSSL_PARAM_get_utf8_string(p, &ciph_ptr, sizeof(ciph_name)))
         return 0;
     cipher = EVP_CIPHER_fetch(libctx, ciph_name, propq);
 
-    if (!PKCS12_key_gen_ex(key, EVP_CIPHER_key_length(cipher), params, libctx, propq)) {
+    if (!PKCS12_key_gen_ex(key, EVP_CIPHER_key_length(cipher), params, pass, passlen, libctx, propq)) {
         ERR_raise(ERR_LIB_PKCS12, PKCS12_R_KEY_GEN_ERROR);
         return 0;
     }
-    if (!PKCS12_key_gen_ex(iv, EVP_CIPHER_iv_length(cipher), params, libctx, propq)) {
+    if (!PKCS12_key_gen_ex(iv, EVP_CIPHER_iv_length(cipher), params, pass, passlen, libctx, propq)) {
         ERR_raise(ERR_LIB_PKCS12, PKCS12_R_IV_GEN_ERROR);
         return 0;
     }
@@ -120,14 +122,15 @@ int PKCS12_PBE_decode(X509_ALGOR *algor, OSSL_PARAM **params)
     unsigned int iter = 0;
     OSSL_PARAM *p;
     int pbe_nid, cipher_nid, md_nid;
-    const char *cipher_name, *md_name;
+    char *cipher_name, *md_name;
 
-    *params = OPENSSL_malloc(sizeof(OSSL_PARAM) * 5);
-    p = *params;
+    p = *params = OPENSSL_malloc(sizeof(OSSL_PARAM) * 6);
+
+    *p++ = OSSL_PARAM_construct_utf8_string(OSSL_PBE_PARAM_ALG, "PKCS12", 0);
 
     pbe_nid = OBJ_obj2nid(algor->algorithm);
     if (!EVP_PBE_find_ex(EVP_PBE_TYPE_OUTER, pbe_nid, &cipher_nid, &md_nid,
-                         NULL, NULL, NULL, NULL)) {
+                         NULL, NULL)) {
         char obj_tmp[80];
         if (algor->algorithm == NULL)
             OPENSSL_strlcpy(obj_tmp, "NULL", sizeof(obj_tmp));
@@ -170,7 +173,12 @@ int PKCS12_PBE_decode(X509_ALGOR *algor, OSSL_PARAM **params)
     }
     *p++ = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_SALT, pbe->salt->data,
                                              pbe->salt->length);
+    *p++ = OSSL_PARAM_construct_end();
     PBEPARAM_free(pbe);
     return 1;
 }
+
+const EVP_PBE_METH PKCS12_PBE_METH = {
+    OSSL_PBE_NAME_PKCS12, PKCS12_PBE_keygen_ex, PKCS12_PBE_encode, PKCS12_PBE_decode
+};
 

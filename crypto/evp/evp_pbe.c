@@ -19,6 +19,9 @@
 
 /* Password based encryption (PBE) functions */
 
+int EVP_PBE_find_meth(int type, char *pbe_name, EVP_PBE_METH **meth);
+
+
 /* Setup a cipher context from a PBE algorithm */
 
 struct evp_pbe_st {
@@ -27,44 +30,42 @@ struct evp_pbe_st {
     int cipher_nid;
     int md_nid;
     EVP_PBE_KEYGEN *keygen;
-    EVP_PBE_KEYGEN_EX *keygen_ex;
-    EVP_PBE_ENCODE *encode;
-    EVP_PBE_DECODE *decode;
+    const EVP_PBE_METH *meth;
 };
 
 static STACK_OF(EVP_PBE_CTL) *pbe_algs;
 
 static const EVP_PBE_CTL builtin_pbe[] = {
     {EVP_PBE_TYPE_OUTER, NID_pbeWithMD2AndDES_CBC,
-     NID_des_cbc, NID_md2, PKCS5_PBE_keyivgen, PKCS5_PBE_keygen_ex, PKCS5_PBE_encode, PKCS5_PBE_decode},
+     NID_des_cbc, NID_md2, PKCS5_PBE_keyivgen, &PKCS5_PBE_METH},
     {EVP_PBE_TYPE_OUTER, NID_pbeWithMD5AndDES_CBC,
-     NID_des_cbc, NID_md5, PKCS5_PBE_keyivgen, PKCS5_PBE_keygen_ex, PKCS5_PBE_encode, PKCS5_PBE_decode},
+     NID_des_cbc, NID_md5, PKCS5_PBE_keyivgen, &PKCS5_PBE_METH},
     {EVP_PBE_TYPE_OUTER, NID_pbeWithSHA1AndRC2_CBC,
-     NID_rc2_64_cbc, NID_sha1, PKCS5_PBE_keyivgen, PKCS5_PBE_keygen_ex, PKCS5_PBE_encode, PKCS5_PBE_decode},
+     NID_rc2_64_cbc, NID_sha1, PKCS5_PBE_keyivgen, &PKCS5_PBE_METH},
 
     {EVP_PBE_TYPE_OUTER, NID_id_pbkdf2, -1, -1, PKCS5_v2_PBKDF2_keyivgen},
 
     {EVP_PBE_TYPE_OUTER, NID_pbe_WithSHA1And128BitRC4,
-     NID_rc4, NID_sha1, PKCS12_PBE_keyivgen, PKCS12_PBE_keygen_ex, PKCS12_PBE_encode, PKCS12_PBE_decode},
+     NID_rc4, NID_sha1, PKCS12_PBE_keyivgen, &PKCS12_PBE_METH},
     {EVP_PBE_TYPE_OUTER, NID_pbe_WithSHA1And40BitRC4,
-     NID_rc4_40, NID_sha1, PKCS12_PBE_keyivgen, PKCS12_PBE_keygen_ex, PKCS12_PBE_encode, PKCS12_PBE_decode},
+     NID_rc4_40, NID_sha1, PKCS12_PBE_keyivgen, &PKCS12_PBE_METH},
     {EVP_PBE_TYPE_OUTER, NID_pbe_WithSHA1And3_Key_TripleDES_CBC,
-     NID_des_ede3_cbc, NID_sha1, PKCS12_PBE_keyivgen, PKCS12_PBE_keygen_ex, PKCS12_PBE_encode, PKCS12_PBE_decode},
+     NID_des_ede3_cbc, NID_sha1, PKCS12_PBE_keyivgen, &PKCS12_PBE_METH},
     {EVP_PBE_TYPE_OUTER, NID_pbe_WithSHA1And2_Key_TripleDES_CBC,
-     NID_des_ede_cbc, NID_sha1, PKCS12_PBE_keyivgen, PKCS12_PBE_keygen_ex, PKCS12_PBE_encode, PKCS12_PBE_decode},
+     NID_des_ede_cbc, NID_sha1, PKCS12_PBE_keyivgen, &PKCS12_PBE_METH},
     {EVP_PBE_TYPE_OUTER, NID_pbe_WithSHA1And128BitRC2_CBC,
-     NID_rc2_cbc, NID_sha1, PKCS12_PBE_keyivgen, PKCS12_PBE_keygen_ex, PKCS12_PBE_encode, PKCS12_PBE_decode},
+     NID_rc2_cbc, NID_sha1, PKCS12_PBE_keyivgen, &PKCS12_PBE_METH},
     {EVP_PBE_TYPE_OUTER, NID_pbe_WithSHA1And40BitRC2_CBC,
-     NID_rc2_40_cbc, NID_sha1, PKCS12_PBE_keyivgen, PKCS12_PBE_keygen_ex, PKCS12_PBE_encode, PKCS12_PBE_decode},
+     NID_rc2_40_cbc, NID_sha1, PKCS12_PBE_keyivgen, &PKCS12_PBE_METH},
 
-    {EVP_PBE_TYPE_OUTER, NID_pbes2, -1, -1, PKCS5_v2_PBE_keyivgen, PKCS5_PBE2_keygen_ex, PKCS5_PBE2_encode, PKCS5_PBE2_decode},
+    {EVP_PBE_TYPE_OUTER, NID_pbes2, -1, -1, PKCS5_v2_PBE_keyivgen, &PKCS5_PBE2_METH},
 
     {EVP_PBE_TYPE_OUTER, NID_pbeWithMD2AndRC2_CBC,
-     NID_rc2_64_cbc, NID_md2, PKCS5_PBE_keyivgen, PKCS5_PBE_keygen_ex, PKCS5_PBE_encode, PKCS5_PBE_decode},
+     NID_rc2_64_cbc, NID_md2, PKCS5_PBE_keyivgen, &PKCS5_PBE_METH},
     {EVP_PBE_TYPE_OUTER, NID_pbeWithMD5AndRC2_CBC,
-     NID_rc2_64_cbc, NID_md5, PKCS5_PBE_keyivgen, PKCS5_PBE_keygen_ex, PKCS5_PBE_encode, PKCS5_PBE_decode},
+     NID_rc2_64_cbc, NID_md5, PKCS5_PBE_keyivgen, &PKCS5_PBE_METH},
     {EVP_PBE_TYPE_OUTER, NID_pbeWithSHA1AndDES_CBC,
-     NID_des_cbc, NID_sha1, PKCS5_PBE_keyivgen, PKCS5_PBE_keygen_ex, PKCS5_PBE_encode, PKCS5_PBE_decode},
+     NID_des_cbc, NID_sha1, PKCS5_PBE_keyivgen, &PKCS5_PBE_METH},
 
     {EVP_PBE_TYPE_PRF, NID_hmacWithSHA1, -1, NID_sha1, 0},
     {EVP_PBE_TYPE_PRF, NID_hmac_md5, -1, NID_md5, 0},
@@ -81,22 +82,20 @@ static const EVP_PBE_CTL builtin_pbe[] = {
      NID_id_GostR3411_2012_512, 0},
     {EVP_PBE_TYPE_PRF, NID_hmacWithSHA512_224, -1, NID_sha512_224, 0},
     {EVP_PBE_TYPE_PRF, NID_hmacWithSHA512_256, -1, NID_sha512_256, 0},
-    {EVP_PBE_TYPE_KDF, NID_id_pbkdf2, -1, -1, PKCS5_v2_PBKDF2_keyivgen, PKCS5_v2_PBKDF2_keygen_ex, PKCS5_v2_PBKDF2_encode, PKCS5_v2_PBKDF2_decode},
+    {EVP_PBE_TYPE_KDF, NID_id_pbkdf2, -1, -1, PKCS5_v2_PBKDF2_keyivgen, &PKCS5_PBKDF2_METH},
 #ifndef OPENSSL_NO_SCRYPT
-    {EVP_PBE_TYPE_KDF, NID_id_scrypt, -1, -1, PKCS5_v2_scrypt_keyivgen, PKCS5_v2_scrypt_keygen_ex, PKCS5_v2_scrypt_encode, PKCS5_v2_scrypt_decode}
+    {EVP_PBE_TYPE_KDF, NID_id_scrypt, -1, -1, PKCS5_v2_scrypt_keyivgen, &PKCS5_SCRYPT_METH}
 #endif
 };
 
-int EVP_PBE_asn1_to_params(X509_ALGOR *algor,
- // TODO: Handle password somewhere else?  const char *pass, int passlen,
-                           OSSL_PARAM **params)
+int EVP_PBE_asn1_to_params(X509_ALGOR *algor, OSSL_PARAM **params)
 {
     int pbe_nid;
-    EVP_PBE_DECODE *decode;
+    EVP_PBE_METH *meth;
 
     pbe_nid = OBJ_obj2nid(algor->algorithm);
     if (!EVP_PBE_find_ex(EVP_PBE_TYPE_OUTER, pbe_nid, NULL, NULL,
-                         NULL, NULL, NULL, &decode)) {
+                         NULL, &meth)) {
         char obj_tmp[80];
         if (algor->algorithm == NULL)
             OPENSSL_strlcpy(obj_tmp, "NULL", sizeof(obj_tmp));
@@ -107,33 +106,29 @@ int EVP_PBE_asn1_to_params(X509_ALGOR *algor,
         return 0;
     }
 
-/* TODO: Move out into pbes2 decode func */
-/*  if (strcmp(pbe_name, "PBES2") == 0)
-  {
-    PBE2PARAM *pbe2 = NULL;
-    EVP_PBE_DECODE *decode2;
-
-    pbe2 = ASN1_TYPE_unpack_sequence(ASN1_ITEM_rptr(PBE2PARAM), algor->parameters);
-    if (pbe2 == NULL) {
-        ERR_raise(ERR_LIB_EVP, EVP_R_DECODE_ERROR);
-        return 0;
-    }
-
-    / See if we recognise the key derivation function /
-    if (!EVP_PBE_find_ex(EVP_PBE_TYPE_KDF, OBJ_obj2nid(pbe2->keyfunc->algorithm),
-                         NULL, NULL, NULL, NULL, &decode2)) {
-        ERR_raise(ERR_LIB_EVP, EVP_R_UNSUPPORTED_KEY_DERIVATION_FUNCTION);
-        return 0;
-    }
-
-  }
-*/
-    return decode(algor, params);
+    return meth->decode(algor, params);
 }
 
 int EVP_PBE_params_to_asn1(OSSL_PARAM *params, X509_ALGOR **algor)
 {
-    return 0;
+    char pbe_name[80];
+    char *p_name = pbe_name;
+    EVP_PBE_METH *meth;
+    OSSL_PARAM *p;
+
+    p = OSSL_PARAM_locate_const(params, OSSL_PBE_PARAM_ALG);
+    if (p == NULL)
+        return 0;
+    if (!OSSL_PARAM_get_utf8_string(p, &p_name, sizeof(pbe_name)))
+        return 0;
+
+    if (!EVP_PBE_find_meth(EVP_PBE_TYPE_OUTER, pbe_name, &meth)) {
+        ERR_raise_data(ERR_LIB_EVP, EVP_R_UNKNOWN_PBE_ALGORITHM,
+                       pbe_name);
+        return 0;
+    }
+
+    return meth->encode(algor, params);
 }
 
 
@@ -142,20 +137,20 @@ int EVP_PBE_CipherInit_ex(EVP_CIPHER_CTX **ctx, OSSL_PARAM *params,
                           OSSL_LIB_CTX *libctx, const char *propq,
                           int en_de)
 {
-    const char *ciph_name;
-    EVP_PBE_KEYGEN_EX *keygen_ex;
+    char pbe_name[80];
+    char *p_name = pbe_name;
+    EVP_PBE_METH *meth;
     const OSSL_PARAM *p;
 
-    p = OSSL_PARAM_locate_const(params, OSSL_PBE_PARAM_CIPHER);
+    p = OSSL_PARAM_locate_const(params, OSSL_PBE_PARAM_ALG);
     if (p == NULL)
         return 0;
-    if (!OSSL_PARAM_get_utf8_ptr(p, &ciph_name))
+    if (!OSSL_PARAM_get_utf8_string(p, &p_name, sizeof(pbe_name)))
         return 0;
 
-    if (!EVP_PBE_find_ex(EVP_PBE_TYPE_OUTER, OBJ_txt2nid(ciph_name),
-                         NULL, NULL, NULL, &keygen_ex, NULL, NULL)) {
+    if (!EVP_PBE_find_meth(EVP_PBE_TYPE_OUTER, pbe_name, &meth)) {
         ERR_raise_data(ERR_LIB_EVP, EVP_R_UNKNOWN_PBE_ALGORITHM,
-                       ciph_name);
+                       pbe_name);
         return 0;
     }
 
@@ -164,7 +159,7 @@ int EVP_PBE_CipherInit_ex(EVP_CIPHER_CTX **ctx, OSSL_PARAM *params,
     else if (passlen == -1)
         passlen = strlen(pass);
 
-    return keygen_ex(ctx, params, pass, passlen, en_de, libctx, propq);
+    return meth->keygen_ex(ctx, params, pass, passlen, en_de, libctx, propq);
 }
 
 int EVP_PBE_CipherInit(ASN1_OBJECT *pbe_obj, const char *pass, int passlen,
@@ -290,9 +285,24 @@ int EVP_PBE_alg_add(int nid, const EVP_CIPHER *cipher, const EVP_MD *md,
                                 cipher_nid, md_nid, keygen);
 }
 
+int EVP_PBE_find_meth(int type, char *pbe_name, EVP_PBE_METH **meth)
+{
+    int i;
+
+    /* TODO: This is ugly. Make it better */
+    for (i = 0; i < sizeof(builtin_pbe)/sizeof(EVP_PBE_CTL); i++) {
+        if (builtin_pbe[i].pbe_type == type && builtin_pbe[i].meth != NULL) {
+            if (strcmp(builtin_pbe[i].meth->name, pbe_name) == 0) {
+                *meth = builtin_pbe[i].meth;
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 int EVP_PBE_find_ex(int type, int pbe_nid, int *pcnid, int *pmnid,
-                    EVP_PBE_KEYGEN **pkeygen, EVP_PBE_KEYGEN_EX **keygen_ex,
-                    EVP_PBE_ENCODE **encode, EVP_PBE_DECODE **decode)
+                    EVP_PBE_KEYGEN **pkeygen, EVP_PBE_METH **meth)
 {
     EVP_PBE_CTL *pbetmp = NULL, pbelu;
     int i;
@@ -317,19 +327,15 @@ int EVP_PBE_find_ex(int type, int pbe_nid, int *pcnid, int *pmnid,
         *pmnid = pbetmp->md_nid;
     if (pkeygen)
         *pkeygen = pbetmp->keygen;
-    if (keygen_ex)
-        *keygen_ex = pbetmp->keygen_ex;
-    if (encode)
-        *encode = pbetmp->encode;
-    if (decode)
-        *decode = pbetmp->decode;
+    if (meth)
+        *meth = pbetmp->meth;
     return 1;
 }
 
 int EVP_PBE_find(int type, int pbe_nid,
                  int *pcnid, int *pmnid, EVP_PBE_KEYGEN **pkeygen)
 {
-    return EVP_PBE_find_ex(type, pbe_nid, pcnid, pmnid, pkeygen, NULL, NULL, NULL);
+    return EVP_PBE_find_ex(type, pbe_nid, pcnid, pmnid, pkeygen, NULL);
 }
 
 static void free_evp_pbe_ctl(EVP_PBE_CTL *pbe)
