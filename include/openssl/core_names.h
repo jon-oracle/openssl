@@ -190,7 +190,6 @@ extern "C" {
 #define OSSL_KDF_PARAM_DIGEST       OSSL_ALG_PARAM_DIGEST     /* utf8 string */
 #define OSSL_KDF_PARAM_CIPHER       OSSL_ALG_PARAM_CIPHER     /* utf8 string */
 #define OSSL_KDF_PARAM_MAC          OSSL_ALG_PARAM_MAC        /* utf8 string */
-#define OSSL_KDF_PARAM_PRF          "prf"       /* utf8 string */
 #define OSSL_KDF_PARAM_MAC_SIZE     "maclen"    /* size_t */
 #define OSSL_KDF_PARAM_PROPERTIES   OSSL_ALG_PARAM_PROPERTIES /* utf8 string */
 #define OSSL_KDF_PARAM_ITER         "iter"      /* unsigned int */
@@ -231,19 +230,6 @@ extern "C" {
 #define OSSL_KDF_NAME_X963KDF        "X963KDF"
 #define OSSL_KDF_NAME_KBKDF          "KBKDF"
 #define OSSL_KDF_NAME_KRB5KDF        "KRB5KDF"
-
-/* PBE params */
-#define OSSL_PBE_PARAM_ALG           "alg"      /* utf8 string */
-#define OSSL_PBE_PARAM_PASSWORD      OSSL_KDF_PARAM_PASSWORD  /* octet string */
-#define OSSL_PBE_PARAM_ITER          OSSL_KDF_PARAM_ITER      /* unsigned int */
-#define OSSL_PBE_PARAM_SALT          OSSL_KDF_PARAM_SALT      /* octet string */
-#define OSSL_PBE_PARAM_CIPHER        OSSL_ALG_PARAM_CIPHER    /* utf8 string */
-#define OSSL_PBE_PARAM_IV            "iv"       /* octet string */
-
-/* PBE Algorithm class names */
-#define OSSL_PBE_NAME_PKCS5          "PKCS5"    /* PKCS#5 v1.5 */
-#define OSSL_PBE_NAME_PKCS12         "PKCS12"
-#define OSSL_PBE_NAME_PBES2          "PBES2"    /* PKCS#5 v2 */
 
 /* Known RAND names */
 #define OSSL_RAND_PARAM_STATE                   "state"

@@ -10,11 +10,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "internal/cryptlib.h"
-#include <openssl/core_names.h>
+#include <openssl/core.h>
 #include <openssl/x509.h>
 #include <openssl/evp.h>
-#include "crypto/evp.h"
-#include "evp_local.h"
 
 /*
  * Doesn't do anything now: Builtin PBE algorithms in static table.
@@ -24,9 +22,10 @@ void PKCS5_PBE_add(void)
 {
 }
 
-int PKCS5_PBE_keyivgen(EVP_CIPHER_CTX *cctx, const char *pass, int passlen,
-                       ASN1_TYPE *param, const EVP_CIPHER *cipher,
-                       const EVP_MD *md, int en_de)
+int PKCS5_PBE_keyivgen_ex(EVP_CIPHER_CTX *cctx, const char *pass, int passlen,
+                          ASN1_TYPE *param, const EVP_CIPHER *cipher,
+                          const EVP_MD *md, int en_de,
+                          OSSL_LIB_CTX *libctx, const char *propq)
 {
     EVP_MD_CTX *ctx;
     unsigned char md_tmp[EVP_MAX_MD_SIZE];
@@ -117,25 +116,10 @@ int PKCS5_PBE_keyivgen(EVP_CIPHER_CTX *cctx, const char *pass, int passlen,
     return rv;
 }
 
-int PKCS5_PBE_keygen_ex(EVP_CIPHER_CTX **ctx, OSSL_PARAM *params,
-                        const char *pass, int passlen, int en_de,
-                        OSSL_LIB_CTX *libctx, const char *propq)
+int PKCS5_PBE_keyivgen(EVP_CIPHER_CTX *cctx, const char *pass, int passlen,
+                       ASN1_TYPE *param, const EVP_CIPHER *cipher,
+                       const EVP_MD *md, int en_de)
 {
-    return 0;
+    return PKCS5_PBE_keyivgen_ex(cctx, pass, passlen, param, cipher, md, en_de, NULL, NULL);
 }
-
-int PKCS5_PBE_encode(X509_ALGOR **algor, OSSL_PARAM *params)
-{
-    return PKCS12_PBE_encode(algor, params);
-}
-
-// TODO - May need to add extra PKCS5 mode param here?
-int PKCS5_PBE_decode(X509_ALGOR *algor, OSSL_PARAM **params)
-{
-    return PKCS12_PBE_decode(algor, params);
-}
-
-const EVP_PBE_METH PKCS5_PBE_METH = {
-    OSSL_PBE_NAME_PKCS5, PKCS5_PBE_keygen_ex, PKCS5_PBE_encode, PKCS5_PBE_decode
-};
 

@@ -14,7 +14,7 @@
 
 /* Initialise a PKCS12 structure to take data */
 
-PKCS12 *PKCS12_init(int mode)
+PKCS12 *PKCS12_init_ex(int mode, OSSL_LIB_CTX *ctx, const char *propq)
 {
     PKCS12 *pkcs12;
 
@@ -25,6 +25,8 @@ PKCS12 *PKCS12_init(int mode)
     if (!ASN1_INTEGER_set(pkcs12->version, 3))
         goto err;
     pkcs12->authsafes->type = OBJ_nid2obj(mode);
+    pkcs12->authsafes->ctx.libctx = ctx;
+    pkcs12->authsafes->ctx.propq = (char *)propq;
     switch (mode) {
     case NID_pkcs7_data:
         if ((pkcs12->authsafes->d.data = ASN1_OCTET_STRING_new()) == NULL) {
@@ -41,4 +43,9 @@ PKCS12 *PKCS12_init(int mode)
  err:
     PKCS12_free(pkcs12);
     return NULL;
+}
+
+PKCS12 *PKCS12_init(int mode)
+{
+    return PKCS12_init_ex(mode, NULL, NULL);
 }

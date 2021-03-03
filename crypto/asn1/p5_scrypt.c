@@ -144,27 +144,6 @@ X509_ALGOR *PKCS5_pbe2_set_scrypt(const EVP_CIPHER *cipher,
     return NULL;
 }
 
-// TODO: Implement these
-int PKCS5_v2_scrypt_keygen_ex(EVP_CIPHER_CTX **ctx, OSSL_PARAM *params, 
-                        const char *pass, int passlen, int en_de, 
-                        OSSL_LIB_CTX *libctx, const char *propq)
-{
-    return 0;
-}
-
-int PKCS5_v2_scrypt_encode(X509_ALGOR **algor, OSSL_PARAM *params)
-{
-    return 0;
-}
-
-int PKCS5_v2_scrypt_decode(X509_ALGOR *algor, OSSL_PARAM **params)
-{
-    return 0;
-}
-
-const EVP_PBE_METH PKCS5_SCRYPT_METH = {
-    OSSL_KDF_NAME_SCRYPT, PKCS5_v2_scrypt_keygen_ex, PKCS5_v2_scrypt_encode, PKCS5_v2_scrypt_decode
-};
 
 static X509_ALGOR *pkcs5_scrypt_set(const unsigned char *salt, size_t saltlen,
                                     size_t keylen, uint64_t N, uint64_t r,
@@ -230,9 +209,10 @@ static X509_ALGOR *pkcs5_scrypt_set(const unsigned char *salt, size_t saltlen,
     return NULL;
 }
 
-int PKCS5_v2_scrypt_keyivgen(EVP_CIPHER_CTX *ctx, const char *pass,
-                             int passlen, ASN1_TYPE *param,
-                             const EVP_CIPHER *c, const EVP_MD *md, int en_de)
+int PKCS5_v2_scrypt_keyivgen_ex(EVP_CIPHER_CTX *ctx, const char *pass,
+                                int passlen, ASN1_TYPE *param,
+                                const EVP_CIPHER *c, const EVP_MD *md, int en_de,
+                                OSSL_LIB_CTX *libctx, const char *propq)
 {
     unsigned char *salt, key[EVP_MAX_KEY_LENGTH];
     uint64_t p, r, N;
@@ -295,4 +275,12 @@ int PKCS5_v2_scrypt_keyivgen(EVP_CIPHER_CTX *ctx, const char *pass,
     SCRYPT_PARAMS_free(sparam);
     return rv;
 }
+
+int PKCS5_v2_scrypt_keyivgen(EVP_CIPHER_CTX *ctx, const char *pass,
+                             int passlen, ASN1_TYPE *param,
+                             const EVP_CIPHER *c, const EVP_MD *md, int en_de)
+{
+    return PKCS5_v2_scrypt_keyivgen_ex(ctx, pass, passlen, param, c, md, en_de, NULL, NULL);
+}
+
 #endif /* OPENSSL_NO_SCRYPT */

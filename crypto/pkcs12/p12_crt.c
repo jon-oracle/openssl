@@ -221,8 +221,9 @@ PKCS12_SAFEBAG *PKCS12_add_secret(STACK_OF(PKCS12_SAFEBAG) **pbags,
     return NULL;
 }
 
-int PKCS12_add_safe(STACK_OF(PKCS7) **psafes, STACK_OF(PKCS12_SAFEBAG) *bags,
-                    int nid_safe, int iter, const char *pass)
+int PKCS12_add_safe_ex(STACK_OF(PKCS7) **psafes, STACK_OF(PKCS12_SAFEBAG) *bags,
+                       int nid_safe, int iter, const char *pass,
+                       OSSL_LIB_CTX *ctx, const char *propq)
 {
     PKCS7 *p7 = NULL;
     int free_safes = 0;
@@ -244,7 +245,7 @@ int PKCS12_add_safe(STACK_OF(PKCS7) **psafes, STACK_OF(PKCS12_SAFEBAG) *bags,
     if (nid_safe == -1)
         p7 = PKCS12_pack_p7data(bags);
     else
-        p7 = PKCS12_pack_p7encdata(nid_safe, pass, -1, NULL, 0, iter, bags);
+        p7 = PKCS12_pack_p7encdata_ex(nid_safe, pass, -1, NULL, 0, iter, bags, ctx, propq);
     if (p7 == NULL)
         goto err;
 
@@ -260,7 +261,12 @@ int PKCS12_add_safe(STACK_OF(PKCS7) **psafes, STACK_OF(PKCS12_SAFEBAG) *bags,
     }
     PKCS7_free(p7);
     return 0;
+}
 
+int PKCS12_add_safe(STACK_OF(PKCS7) **psafes, STACK_OF(PKCS12_SAFEBAG) *bags,
+                    int nid_safe, int iter, const char *pass)
+{
+    return PKCS12_add_safe_ex(psafes, bags, nid_safe, iter, pass, NULL, NULL);
 }
 
 static int pkcs12_add_bag(STACK_OF(PKCS12_SAFEBAG) **pbags,
@@ -289,13 +295,14 @@ static int pkcs12_add_bag(STACK_OF(PKCS12_SAFEBAG) **pbags,
 
 }
 
-PKCS12 *PKCS12_add_safes(STACK_OF(PKCS7) *safes, int nid_p7)
+PKCS12 *PKCS12_add_safes_ex(STACK_OF(PKCS7) *safes, int nid_p7,
+                            OSSL_LIB_CTX *ctx, const char *propq)
 {
     PKCS12 *p12;
 
     if (nid_p7 <= 0)
         nid_p7 = NID_pkcs7_data;
-    p12 = PKCS12_init(nid_p7);
+    p12 = PKCS12_init_ex(nid_p7, ctx, propq);
     if (p12 == NULL)
         return NULL;
 
@@ -306,4 +313,21 @@ PKCS12 *PKCS12_add_safes(STACK_OF(PKCS7) *safes, int nid_p7)
 
     return p12;
 
+}
+
+PKCS12 *PKCS12_add_safes(STACK_OF(PKCS7) *safes, int nid_p7)
+{
+    OSSL_LIB_CTX *libctx = NULL;
+    const char *propq = NULL;
+
+    /*
+     * Hack alert! Try to retrieve the libctx and propery query
+     * from the first PKCS7 object in the stack.
+     */
+    if (sk_PKCS7_num(safes) > 0) {
+        libctx = sk_PKCS7_value(safes, 0)->ctx.libctx;
+        propq = sk_PKCS7_value(safes, 0)->ctx.propq;
+    }
+
+    return PKCS12_add_safes_ex(safes, nid_p7, libctx, propq);
 }

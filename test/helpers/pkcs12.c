@@ -24,6 +24,9 @@
 /* Set this to > 0 write test data to file */
 int write_files = 0;
 
+OSSL_LIB_CTX *test_ctx = NULL;
+const char *test_propq = NULL;
+
 /* -------------------------------------------------------------------------
  * Local function declarations
  */
@@ -38,6 +41,26 @@ static PKCS12 *read_p12(const char *infile, const PKCS12_ENC *mac);
 static int check_p12_mac(PKCS12 *p12, const PKCS12_ENC *mac);
 static int check_asn1_string(const ASN1_TYPE *av, const char *txt);
 static int check_attrs(const STACK_OF(X509_ATTRIBUTE) *bag_attrs, const PKCS12_ATTR *attrs);
+
+
+/* --------------------------------------------------------------------------
+ * Global settings
+ */
+
+void PKCS12_helper_set_write_files(int enable)
+{
+    write_files = enable;
+}
+
+void PKCS12_helper_set_libctx(OSSL_LIB_CTX *libctx)
+{
+    test_ctx = libctx;
+}
+
+void PKCS12_helper_set_propq(const char *propq)
+{
+    test_propq = propq;
+}
 
 
 /* --------------------------------------------------------------------------
